@@ -20,9 +20,9 @@ const AppNavbar = (props) => {
         <NavbarBrand href="/">Contact Management App</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
-          <Nav className="mr-auto" navbar>
+          <Nav className="ml-auto" navbar>
             <NavItem>
-              <NavLink href="/components/">Components</NavLink>
+              <NavLink href="https://github.com/dbucevac?tab=repositories" target="_blank">github</NavLink>
             </NavItem>
           </Nav>
         </Collapse>

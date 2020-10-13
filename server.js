@@ -2,10 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const db = require('./config/database').database;
-
+const cors = require('cors')
 const contacts = require('./routes/api/contacts')
 
 const app = express();
+
+app.use(cors());
 
 //Bodyparser middleware
 

@@ -15,6 +15,15 @@ router.get('/', (req,res)=>{
            .then(contacts => res.json(contacts))
 })
 
+//@route GET api/contacts/:id
+//@desc Get a contact
+//@access Public
+
+router.get('/:id', (req,res)=>{
+    Contact.findById(req.params.id)
+           .then(contact => res.json(contact))
+})
+
 //@route POST api/contacts
 //@desc Create a contact
 //@access Public
@@ -29,7 +38,7 @@ router.post('/', (req,res)=>{
               .then(contact => res.json(contact));
 })
 
-//@route POST api/contacts
+//@route POST api/contacts/:id
 //@desc Modify a contact
 //@access Public
 

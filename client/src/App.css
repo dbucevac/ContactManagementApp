@@ -1,0 +1,14 @@
+body {
+    background-color: #4a69bd;
+}
+
+.add-btn {
+    margin-bottom:2rem; 
+    margin-top: 2rem;
+}
+
+
+[name="pencil-sharp"] {
+    color: white;
+    
+}

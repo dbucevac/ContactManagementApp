@@ -1,29 +1,66 @@
 import React, {Component} from 'react';
 import {Container, Table, Button} from 'reactstrap';
 import { v4 as uuid } from 'uuid';
+import Axios from '../apis/Axios';
+import EditContactModal from './EditContactModal';
 
 
 class ContactList extends Component {
 
-    state={
-        contacts: [
-            {id: uuid(), name:'Milka', phone: '065889775', email: 'milka@gmail.com'},
-            {id: uuid(), name:'Dragica', phone: '066855996', email: 'dragica998@gmail.com'},
-            {id: uuid(), name:'Nikolica', phone: '060235188', email: 'nikolica@gmail.com'}
-        ]
+    constructor(props){
+        super(props);
+
+        this.state={
+            selectedContact: '',
+            showModal: false,
+            contacts: []
+        }
+
+    }
+    
+
+    componentDidMount(){
+        this.getContacts();
+    }
+
+    getContacts() {
+        Axios.get('/contacts')
+            .then(res => {
+                this.setState({contacts: res.data});
+            })
+            .catch(error => {
+                // handle error
+                console.log(error);
+                alert('Error occured please try again!');
+             });
+    }
+
+    async doDelete(contactId){
+        try{
+          await Axios.delete("/contacts/" + contactId);
+          this.getContacts();
+        }
+        catch(error){
+          alert("Couldn't delete the contact");
+        }
+    }
+
+    toggle = (contactId) =>{
+        this.setState({
+            showModal: !this.state.showModal,
+        })
     }
 
     render(){
-        const {contacts} = this.state;
         return(
             <Container>
                 <Button 
-                color="dark"
-                style={{marginBottom:'2rem', marginTop: '2rem'}}
+                className="add-btn"
+                color="success"
                 onClick={()=>{
 
                 }}>Add Contact</Button>
-                <Table dark>
+                <Table dark hover responsive>
                     <thead>
                         <tr>
                         <th>#</th>
@@ -36,10 +73,10 @@ class ContactList extends Component {
                     <tbody>
                     {this.state.contacts.map((contact,index)=>{
                         return(
-                        <tr>
+                        <tr key={contact._id}>
                         <th scope="row">{index+1}</th>
                         <td>{contact.name}</td>
-                        <td>{contact.phone}</td>
+                        <td>{contact.phoneNumber}</td>
                         <td>{contact.email}</td>
                         <td>
                             <Button
@@ -47,16 +84,27 @@ class ContactList extends Component {
                             color="danger"
                             size="sm"
                             onClick={()=>{
-                                this.setState(state =>({
-                                    contacts: state.contacts.filter(item=>item.id !== contact.id)
-                                }));
-                            }}>&times;</Button>
+                                this.doDelete(contact._id)
+                            }}><ion-icon name="trash-sharp"></ion-icon></Button>
+                            {' '}<Button
+                            className="edit-btn"
+                            color="warning"
+                            size="sm"
+                            onClick={()=>{
+                                this.toggle(contact._id)
+                            }}><ion-icon name="pencil-sharp"></ion-icon></Button>
                         </td>
                         </tr>
                         );
                     })}
                 </tbody>
                 </Table>
+                <EditContactModal
+                    modal={this.state.showModal}
+                    toggle = {this.toggle}
+                    contactId={this.state.selectedContact}
+                />
+
             </Container>
         );
     }
