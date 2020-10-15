@@ -24,11 +24,11 @@ router.get('/:id', (req,res)=>{
            .then(contact => res.json(contact))
 })
 
-//@route POST api/contacts
+//@route POST api/contacts/add
 //@desc Create a contact
 //@access Public
 
-router.post('/', (req,res)=>{
+router.post('/add', (req,res)=>{
     const newContact = new Contact({
         name: req.body.name,
         phoneNumber: req.body.phoneNumber,
@@ -38,11 +38,11 @@ router.post('/', (req,res)=>{
               .then(contact => res.json(contact));
 })
 
-//@route POST api/contacts/:id
+//@route POST api/contacts/edit/:id
 //@desc Modify a contact
 //@access Public
 
-router.post('/:id', (req,res)=>{
+router.post('/edit/:id', (req,res)=>{
     let contact = {};
     
     contact.name= req.body.name;
@@ -52,6 +52,7 @@ router.post('/:id', (req,res)=>{
     let query = {_id:req.params.id}
     
     Contact.update(query, contact)
+            .then(contact => res.json(contact))
            .catch(err=>res.status(404))
 })
 

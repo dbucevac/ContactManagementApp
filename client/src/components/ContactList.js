@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
-import {Container, Table, Button} from 'reactstrap';
-import { v4 as uuid } from 'uuid';
+import {Table, Button, Alert} from "react-bootstrap";
 import Axios from '../apis/Axios';
-import EditContactModal from './EditContactModal';
 
 
 class ContactList extends Component {
@@ -11,9 +9,8 @@ class ContactList extends Component {
         super(props);
 
         this.state={
-            selectedContact: '',
-            showModal: false,
-            contacts: []
+            contacts: [],
+            showAlert: false
         }
 
     }
@@ -21,6 +18,10 @@ class ContactList extends Component {
 
     componentDidMount(){
         this.getContacts();
+    }
+
+    closeAlert() {
+        this.setState({showAlert: !this.state.showAlert})
     }
 
     getContacts() {
@@ -39,28 +40,32 @@ class ContactList extends Component {
         try{
           await Axios.delete("/contacts/" + contactId);
           this.getContacts();
+          this.closeAlert();
         }
         catch(error){
           alert("Couldn't delete the contact");
         }
     }
 
-    toggle = (contactId) =>{
-        this.setState({
-            showModal: !this.state.showModal,
-        })
+    goToAdd() {
+        this.props.history.push("/contacts/add");
+    }
+    
+
+    goToEdit(contactId) {
+        this.props.history.push("/contacts/edit/" + contactId);
     }
 
     render(){
         return(
-            <Container>
+            <div>
                 <Button 
                 className="add-btn"
-                color="success"
+                variant="success"
                 onClick={()=>{
-
+                    this.goToAdd();
                 }}>Add Contact</Button>
-                <Table dark hover responsive>
+                <Table variant="dark" hover striped responsive>
                     <thead>
                         <tr>
                         <th>#</th>
@@ -81,17 +86,17 @@ class ContactList extends Component {
                         <td>
                             <Button
                             className="remove-btn"
-                            color="danger"
+                            variant="danger"
                             size="sm"
                             onClick={()=>{
                                 this.doDelete(contact._id)
                             }}><ion-icon name="trash-sharp"></ion-icon></Button>
                             {' '}<Button
                             className="edit-btn"
-                            color="warning"
+                            variant="warning"
                             size="sm"
                             onClick={()=>{
-                                this.toggle(contact._id)
+                                this.goToEdit(contact._id)
                             }}><ion-icon name="pencil-sharp"></ion-icon></Button>
                         </td>
                         </tr>
@@ -99,13 +104,11 @@ class ContactList extends Component {
                     })}
                 </tbody>
                 </Table>
-                <EditContactModal
-                    modal={this.state.showModal}
-                    toggle = {this.toggle}
-                    contactId={this.state.selectedContact}
-                />
-
-            </Container>
+                <Alert show={this.state.showAlert} key="1" variant="success" 
+                onClose={()=> this.closeAlert()}dismissible>
+    Contact was deleted successfully!
+  </Alert>
+            </div>
         );
     }
 }
