@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Alert } from "react-bootstrap";
 import Axios from '../apis/Axios';
 
 class EditContact extends React.Component {
@@ -14,7 +14,9 @@ class EditContact extends React.Component {
 
     this.state = {
       contactId: this.props.match.params.id,
-      contact: contact
+      contact: contact,
+      errors: [],
+      show: false
     };
   }
 
@@ -48,14 +50,32 @@ class EditContact extends React.Component {
 
   doEdit() {
     Axios.post("/contacts/edit/" + this.state.contactId, this.state.contact)
-      .then(() => {
-        
-        this.props.history.push("/contacts");
+      .then(()=> {
+        this.setState({show: true, errors: []})
       })
-      .catch(() => alert("Something went wrong!"));
+      .then(() => {
+        setTimeout(()=>{
+        this.props.history.push("/contacts")
+      }, 1500)
+      })
+      .catch((error) => {
+        this.setState({
+          errors: error.response.data.errors
+        })
+      });
+  }
+
+  cancel(){
+    this.props.history.push("/contacts")
   }
 
   render() {
+    const errors = this.state.errors.length !== 0 ? this.state.errors.map((error, index)=>{
+      return <Alert key={index} variant="danger">{error.data}</Alert>
+    }): null;
+  
+    const success = this.state.show ? <Alert variant="success">Contact successfully edited!</Alert>: null;
+
       return (
         <div>
           <h1>Edit contact</h1>
@@ -89,8 +109,13 @@ class EditContact extends React.Component {
                 onChange={(e) => this.valueInputChanged(e)}
               />
             </Form.Group>
-            <Button onClick={() => this.doEdit()}>Edit</Button>
+            <Button variant="success" onClick={() => this.doEdit()}>Save</Button>
+            <Button variant="danger" onClick={() => this.cancel()}>Cancel</Button>
           </Form>
+          <div style={{marginTop:"20px"}}>
+          {errors}
+          {success}
+          </div>
         </div>
       );
     }

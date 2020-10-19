@@ -12,6 +12,7 @@ import Home from "./components/Home";
 import ContactList from './components/ContactList';
 import EditContact from './components/EditContact';
 import AddContact from './components/AddContact';
+import NotFound from './components/NotFound'
 import './App.css'
 
 
@@ -51,6 +52,7 @@ class App extends Component {
                   path="/contacts/edit/:id"
                   component={EditContact}
                 />
+                <Route component={NotFound} />
               </Switch>
             </Container>
           </Router>

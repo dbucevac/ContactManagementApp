@@ -1,4 +1,5 @@
 const express = require('express');
+const {contactValidationRules, validate} = require('./validator')
 const router = express.Router();
 
 //Contact Model
@@ -28,7 +29,8 @@ router.get('/:id', (req,res)=>{
 //@desc Create a contact
 //@access Public
 
-router.post('/add', (req,res)=>{
+router.post('/add',  contactValidationRules(), validate, (req,res)=>{
+
     const newContact = new Contact({
         name: req.body.name,
         phoneNumber: req.body.phoneNumber,
@@ -42,7 +44,7 @@ router.post('/add', (req,res)=>{
 //@desc Modify a contact
 //@access Public
 
-router.post('/edit/:id', (req,res)=>{
+router.post('/edit/:id', contactValidationRules(), validate, (req,res)=>{
     let contact = {};
     
     contact.name= req.body.name;

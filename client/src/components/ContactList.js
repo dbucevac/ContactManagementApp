@@ -20,7 +20,7 @@ class ContactList extends Component {
         this.getContacts();
     }
 
-    closeAlert() {
+    handleAlert() {
         this.setState({showAlert: !this.state.showAlert})
     }
 
@@ -40,7 +40,7 @@ class ContactList extends Component {
         try{
           await Axios.delete("/contacts/" + contactId);
           this.getContacts();
-          this.closeAlert();
+          this.handleAlert();
         }
         catch(error){
           alert("Couldn't delete the contact");
@@ -105,8 +105,8 @@ class ContactList extends Component {
                 </tbody>
                 </Table>
                 <Alert show={this.state.showAlert} key="1" variant="success" 
-                onClose={()=> this.closeAlert()}dismissible>
-    Contact was deleted successfully!
+                onClose={()=> this.handleAlert()} dismissible>
+    Contact deleted successfully!
   </Alert>
             </div>
         );

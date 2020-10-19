@@ -12,7 +12,6 @@ app.use(cors());
 //Bodyparser middleware
 
 app.use(bodyParser.json());
-
 // Connect to Mongo
 
 mongoose.connect(db)
