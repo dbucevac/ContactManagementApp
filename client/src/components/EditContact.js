@@ -1,6 +1,7 @@
 import React from "react";
-import { Form, Button, Alert } from "react-bootstrap";
+import { Form, Button, Alert, Row, Col } from "react-bootstrap";
 import Axios from '../apis/Axios';
+import style from './contact.module.css'
 
 class EditContact extends React.Component {
   constructor(props) {
@@ -77,40 +78,49 @@ class EditContact extends React.Component {
     const success = this.state.show ? <Alert variant="success">Contact successfully edited!</Alert>: null;
 
       return (
-        <div>
+        <div className={style.divForm}>
           <h1>Edit contact</h1>
           <Form>
-            <Form.Group>
+            <Form.Group as={Row} className="justify-content-center">
+              <Col sm={6}>
               <Form.Label>Name</Form.Label>
               <Form.Control
                 name="name"
+                className={style.inputForm}
                 as="input"
                 value={this.state.contact.name}
                 onChange={(e) => {
                   this.valueInputChanged(e);
                 }}
               />
+              </Col>
             </Form.Group>
-            <Form.Group>
+            <Form.Group as={Row} className="justify-content-center">
+              <Col sm={6}> 
               <Form.Label>Phone Number</Form.Label>
               <Form.Control
                 name="phoneNumber"
+                className={style.inputForm}
                 as="input"
                 value={this.state.contact.phoneNumber}
                 onChange={(e) => this.valueInputChanged(e)}
               />
+              </Col>
             </Form.Group>
-            <Form.Group>
+            <Form.Group as={Row} className="justify-content-center">
+              <Col sm={6}> 
               <Form.Label>Email</Form.Label>
               <Form.Control
                 name="email"
+                className={style.inputForm}
                 as="input"
                 value={this.state.contact.email}
                 onChange={(e) => this.valueInputChanged(e)}
               />
+              </Col>
             </Form.Group>
-            <Button variant="success" onClick={() => this.doEdit()}>Save</Button>
-            <Button variant="danger" onClick={() => this.cancel()}>Cancel</Button>
+            <Button className={style.btnForm} variant="success" onClick={() => this.doEdit()}>Save</Button>
+            <Button className={style.btnForm} variant="danger" onClick={() => this.cancel()}>Cancel</Button>
           </Form>
           <div style={{marginTop:"20px"}}>
           {errors}
